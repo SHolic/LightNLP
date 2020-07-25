@@ -12,9 +12,7 @@ class NERTrainer(BaseTrainerMixin):
         super(NERTrainer, self).__init__()
         self.batch_size = batch_size
         self.epoch_num = epoch_num
-        self.device = torch.device(device) if isinstance(device, str) else None
-        if device is None:
-            self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        self.device = device
 
     def train(self, model, train_data, dev_data, optimizer, scheduler,
               summary_writer, verbose=1, label2idx=None):
@@ -72,7 +70,7 @@ class NERTrainer(BaseTrainerMixin):
             color_print("[Epoch] {:0>3d}".format(epoch),
                         "[lr] {:0>.6f}".format(scheduler.get_lr()[0]),
                         "[avg train loss] {:0>.4f}".format(avg_train_loss),
-                        "[avg dev lost] {:>0.4f}".format(avg_test_loss),
+                        "[avg dev loss] {:>0.4f}".format(avg_test_loss),
                         "[time] {:<.0f}s".format(time.time() - start_time),
                         verbose=verbose + 1 if verbose != 0 else 0)
 

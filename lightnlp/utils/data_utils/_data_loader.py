@@ -4,7 +4,6 @@ from transformers import BertTokenizer
 import numpy as np
 import joblib
 import zipfile
-from functools import reduce
 from sklearn.model_selection import train_test_split
 
 from ..common import set_seed, ctqdm
@@ -30,7 +29,7 @@ class RawDataLoader:
         return ret
 
     def _load_txt_to_list(self, path):
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             ret = [i.rstrip("\n") \
                    for i in ctqdm(iterable=f.readlines(), verbose=self.verbose, desc="Load raw data")]
         return ret
@@ -94,7 +93,6 @@ class EmbeddingLoader:
         self.verbose = verbose
 
     def _load_pre_trained(self, path):
-        from tqdm import tqdm
         embs = list()
         word_set = set()
         with open(path, encoding="utf-8") as f:
@@ -211,7 +209,7 @@ class BaseDataLoader:
                                            torch.tensor([d[1] for d in data]))
             if self.batch_size is None:
                 return tensor_dataset
-            return DataLoader(dataset=tensor_dataset, batch_size=self.batch_size)
+            return DataLoader(dataset=tensor_dataset, batch_size=self.batch_size, drop_last=True)
         else:
             train, test = train_test_split(data, train_size=self.train_size, random_state=self.random_state)
 
@@ -222,8 +220,8 @@ class BaseDataLoader:
 
             if self.batch_size is None:
                 return [train_tensor_dataset, test_tensor_dataset]
-            return [DataLoader(dataset=train_tensor_dataset, batch_size=self.batch_size),
-                    DataLoader(dataset=test_tensor_dataset, batch_size=self.batch_size)]
+            return [DataLoader(dataset=train_tensor_dataset, batch_size=self.batch_size, drop_last=True),
+                    DataLoader(dataset=test_tensor_dataset, batch_size=self.batch_size, drop_last=True)]
 
     def load_predict(self, corpus, batch_size=None, n_jobs=1):
         data = joblib.Parallel(n_jobs)(

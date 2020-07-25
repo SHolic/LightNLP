@@ -6,7 +6,7 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 class RNNLayer(nn.Module):
     def __init__(self, input_dim, hidden_dim, num_layers=1, bidirectional=True, batch_first=True, cell_type='lstm',
-                 batch_size=1):
+                 batch_size=1, device=None):
         super(RNNLayer, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
@@ -17,6 +17,7 @@ class RNNLayer(nn.Module):
         self.batch_first = batch_first
         self.cell_type = cell_type
         self.batch_size = batch_size
+        self.device = device
 
         if self.cell_type.lower() == 'lstm':
             self.rnn = nn.LSTM(input_size=self.input_dim,
@@ -31,24 +32,31 @@ class RNNLayer(nn.Module):
                               bidirectional=self.bidirectional,
                               batch_first=self.batch_first)
 
-    def init_hidden(self):
+    def init_hidden(self, batch_size=None):
+        if batch_size is None:
+            batch_size = self.batch_size
         if self.cell_type.lower() == 'lstm':
             return (
-                Variable(torch.zeros(self.num_layers * self.num_directions, self.batch_size,
-                                     self.hidden_dim // self.num_directions)),
-                Variable(torch.zeros(self.num_layers * self.num_directions, self.batch_size,
-                                     self.hidden_dim // self.num_directions))
+                Variable(torch.zeros(self.num_layers * self.num_directions, batch_size,
+                                     self.hidden_dim // self.num_directions)).to(self.device),
+                Variable(torch.zeros(self.num_layers * self.num_directions, batch_size,
+                                     self.hidden_dim // self.num_directions)).to(self.device)
             )
         elif self.cell_type.lower() == 'gru':
-            return Variable(torch.zeros(self.num_layers * self.num_directions, self.batch_size, self.hidden_dim))
+            return Variable(torch.zeros(self.num_layers * self.num_directions, batch_size, self.hidden_dim)).to(self.device)
         return None
 
-    def forward(self, inputs, mask=None, hidden_state=None, return_type="one"):
+    def forward(self, inputs, mask=None, hidden_state=None, return_type="one", batch_size=None):
         if return_type not in ("one", "all"):
             raise ValueError("return_type must be \'one\' or \'all\'!")
+        if batch_size is None:
+            batch_size = self.batch_size
         if hidden_state is None:
-            hidden_state = self.init_hidden()
+            hidden_state = self.init_hidden(batch_size=batch_size)
+        else:
+            hidden_state = hidden_state.to(self.device)
         if mask is None:
+            # print(inputs.shape, hidden_state[0].shape, self.num_layers)
             output, hidden = self.rnn(inputs, hidden_state)
             if return_type == "one":
                 return output[:, -1, :]
@@ -73,5 +81,5 @@ if __name__ == "__main__":
     ])
     mask = [[1, 1, 1], [1, 1, 0], [1, 1, 0]]
     rnn = RNNLayer(input_dim=4, hidden_dim=2, num_layers=1, batch_first=True, batch_size=3)
-    output = rnn(inputs=data, mask=mask, return_type="all")
+    output = rnn(inputs=data, mask=None, return_type="all")
     print(output)

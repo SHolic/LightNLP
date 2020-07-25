@@ -30,9 +30,8 @@ class AlbertClassification(BaseModelMixin):
                  n_jobs=1,
                  verbose=1
                  ):
-        super(AlbertClassification, self).__init__()
+        super(AlbertClassification, self).__init__(device=device)
         self.pre_trained_model_path = pre_trained_model_path
-        self.device = device
         self.hidden_dim = hidden_dim
         self.lr = lr
         self.eps = eps
@@ -108,22 +107,4 @@ class AlbertClassification(BaseModelMixin):
                                     summary_writer=self.summary_writer, verbose=verbose,
                                     label2idx=self.data_loader.label2idx)
 
-    def save(self, path):
-        torch.save({
-            'model': self.model,
-            'data_loader': self.data_loader,
-            'trainer': self.trainer,
-            'summary_writer': self.summary_writer
-        }, path)
-        return self
-
-    @staticmethod
-    def load(path):
-        cp = torch.load(path)
-        ins = AlbertClassification()
-        ins.model = cp["model"]
-        ins.data_loader = cp["data_loader"]
-        ins.trainer = cp["trainer"]
-        ins.summary_writer = cp["summary_writer"]
-        return ins
 

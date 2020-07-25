@@ -2,9 +2,8 @@ import torch
 import time
 
 from ._base_trainer import BaseTrainerMixin
-from ..utils.common import color_print
+from ..utils.common import color_print, ctqdm, set_seed
 from ..utils.metrics import accuracy_score, classification_report
-from ..utils.common import ctqdm
 
 
 class ATCTrainer(BaseTrainerMixin):
@@ -12,9 +11,7 @@ class ATCTrainer(BaseTrainerMixin):
         super(ATCTrainer, self).__init__()
         self.batch_size = batch_size
         self.epoch_num = epoch_num
-        self.device = torch.device(device) if isinstance(device, str) else None
-        if device is None:
-            self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+        self.device = device
 
     def train(self, model, train_data, dev_data, optimizer, scheduler,
               summary_writer, verbose=1, label2idx=None):
@@ -72,7 +69,7 @@ class ATCTrainer(BaseTrainerMixin):
             color_print("[Epoch] {:0>3d}".format(epoch),
                         "[lr] {:0>.6f}".format(scheduler.get_lr()[0]),
                         "[avg train loss] {:0>.4f}".format(avg_train_loss),
-                        "[avg dev lost] {:>0.4f}".format(avg_test_loss),
+                        "[avg dev loss] {:>0.4f}".format(avg_test_loss),
                         "[time] {:<.0f}s".format(time.time() - start_time),
                         verbose=verbose + 1 if verbose != 0 else 0)
 
@@ -85,6 +82,7 @@ class ATCTrainer(BaseTrainerMixin):
                 label_sorted = sorted(label2idx.items(), key=lambda x: x[1])
                 target_names = [i[0] for i in label_sorted]
                 idx2label = {v: k for k, v in label2idx.items()}
+
                 report = classification_report(
                     [idx2label[index] for index in torch.cat(test_labels, dim=-1).numpy()],
                     [idx2label[index] for index in torch.cat(pred_labels, dim=-1).numpy()],

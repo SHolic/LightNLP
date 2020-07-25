@@ -34,8 +34,7 @@ class CNNTextClassification(BaseModelMixin):
                  n_jobs=1,
                  verbose=1
                  ):
-        super(CNNTextClassification, self).__init__()
-        self.device = device
+        super(CNNTextClassification, self).__init__(device=device)
         self.lr = lr
         self.eps = eps
         self.train_size = train_size
@@ -136,22 +135,3 @@ class CNNTextClassification(BaseModelMixin):
         return self.trainer.predict(model=self.model, test_data=test_data,
                                     summary_writer=self.summary_writer, verbose=verbose,
                                     label2idx=self.data_loader.label2idx)
-
-    def save(self, path):
-        torch.save({
-            'model': self.model,
-            'data_loader': self.data_loader,
-            'trainer': self.trainer,
-            'summary_writer': self.summary_writer
-        }, path)
-        return self
-
-    @staticmethod
-    def load(path):
-        cp = torch.load(path)
-        ins = CNNTextClassification()
-        ins.model = cp["model"]
-        ins.data_loader = cp["data_loader"]
-        ins.trainer = cp["trainer"]
-        ins.summary_writer = cp["summary_writer"]
-        return ins
