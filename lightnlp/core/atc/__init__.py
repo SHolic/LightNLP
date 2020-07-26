@@ -1,3 +1,4 @@
 from ._cnn_text_classification import CNNTextClassification
 from ._albert_classification import AlbertClassification
+from ._bert_classification import BertClassification
 from ._bilstm_classification import BiLSTMClassification

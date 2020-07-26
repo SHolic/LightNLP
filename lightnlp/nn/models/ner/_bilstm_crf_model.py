@@ -4,7 +4,7 @@ import torch.nn as nn
 from ...layers import EmbeddingLayer, RNNLayer, CrfLayer, LinearLayer
 
 
-class BiLstmCrfTokenClassificationModel(nn.Module):
+class BiLSTMCRFTokenClassificationModel(nn.Module):
     def __init__(self,
                  label_num,
                  label2idx,
@@ -18,7 +18,7 @@ class BiLstmCrfTokenClassificationModel(nn.Module):
                  dropout_rate=0.3
                  ):
 
-        super(BiLstmCrfTokenClassificationModel, self).__init__()
+        super(BiLSTMCRFTokenClassificationModel, self).__init__()
         self.label_num = label_num
         self.label2idx = label2idx
         self.vocab_size = vocab_size

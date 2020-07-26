@@ -1,21 +1,18 @@
-from pathlib import PurePath
-import torch
 import torch.nn as nn
 from transformers import AdamW, get_linear_schedule_with_warmup
 
 from ..base import BaseModelMixin
-from ...utils.data_utils import RawDataLoader, AlbertBaseATCDataLoader
+from ...utils.data_utils import RawDataLoader, BertBaseATCDataLoader
 from ...utils.visualizer import SummaryWriter
-from ...nn.models.atc import AlbertClassificationModel
+from ...nn.models.atc import BertClassificationModel
 from ...trainer import ATCTrainer
 
+default_bert_model_path = None
 
-default_albert_model_path = PurePath(__file__).parent.parent.parent / "res/default_albert_model/"
 
-
-class AlbertClassification(BaseModelMixin):
+class BertClassification(BaseModelMixin):
     def __init__(self,
-                 pre_trained_model_path=default_albert_model_path,
+                 pre_trained_model_path=default_bert_model_path,
                  device=None,
                  hidden_dim=100,
                  lr=1e-5,
@@ -30,7 +27,7 @@ class AlbertClassification(BaseModelMixin):
                  n_jobs=1,
                  verbose=1
                  ):
-        super(AlbertClassification, self).__init__(device=device)
+        super(BertClassification, self).__init__(device=device)
         self.pre_trained_model_path = pre_trained_model_path
         self.hidden_dim = hidden_dim
         self.lr = lr
@@ -55,20 +52,20 @@ class AlbertClassification(BaseModelMixin):
         if data_path is not None:
             corpus, label = RawDataLoader(verbose=self.verbose).load_train(path=data_path, file_use="atc")
 
-        data_loader = AlbertBaseATCDataLoader(pre_trained_path=self.pre_trained_model_path,
-                                              max_length=None,
-                                              batch_size=self.batch_size,
-                                              train_size=self.train_size,
-                                              random_state=self.random_state,
-                                              verbose=self.verbose)
+        data_loader = BertBaseATCDataLoader(pre_trained_path=self.pre_trained_model_path,
+                                            max_length=None,
+                                            batch_size=self.batch_size,
+                                            train_size=self.train_size,
+                                            random_state=self.random_state,
+                                            verbose=self.verbose)
         train_data, dev_data = data_loader.load_train(corpus=corpus, label=label, n_jobs=self.n_jobs)
 
-        model = AlbertClassificationModel(label_num=data_loader.label_num,
-                                          hidden_dim=self.hidden_dim,
-                                          finetune=self.embed_finetune,
-                                          pre_trained_model_path=self.pre_trained_model_path,
-                                          linear_activation=self.linear_activation,
-                                          dropout_rate=self.dropout_rate)
+        model = BertClassificationModel(label_num=data_loader.label_num,
+                                        hidden_dim=self.hidden_dim,
+                                        finetune=self.embed_finetune,
+                                        pre_trained_model_path=self.pre_trained_model_path,
+                                        linear_activation=self.linear_activation,
+                                        dropout_rate=self.dropout_rate)
 
         optimizer = AdamW(model.parameters(), lr=self.lr, eps=self.eps)
         scheduler = get_linear_schedule_with_warmup(optimizer,
@@ -80,8 +77,6 @@ class AlbertClassification(BaseModelMixin):
         trainer.train(model=model, train_data=train_data, dev_data=dev_data,
                       optimizer=optimizer, scheduler=scheduler, summary_writer=summary_writer,
                       verbose=self.verbose, label2idx=data_loader.label2idx)
-
-        # summary_writer.plot(title="loss")
 
         self.model = model
         self.data_loader = data_loader
@@ -106,5 +101,3 @@ class AlbertClassification(BaseModelMixin):
     #     return self.trainer.predict(model=self.model, test_data=test_data,
     #                                 summary_writer=self.summary_writer, verbose=verbose,
     #                                 label2idx=self.data_loader.label2idx)
-
-

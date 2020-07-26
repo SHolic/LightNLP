@@ -127,21 +127,24 @@ class BiLSTMClassification(BaseModelMixin):
         self.summary_writer = summary_writer
         return self
 
-    def predict(self, data=None, data_path=None, verbose=1, n_jobs=1):
-        if self.model is None or self.data_loader is None \
-                or self.trainer is None or self.summary_writer is None:
-            raise NotImplementedError("Predict function should be executed after train function!")
-
-        self.data_loader.verbose = verbose
+    def predict(self, data=None, data_path=None, verbose=1, n_jobs=1, **kwargs):
         self.model.batch_size = 1
-        corpus = list()
-        if data is not None:
-            corpus += [data] if isinstance(data, str) else data
-        if data_path is not None:
-            corpus += RawDataLoader(verbose=verbose).load_predict(data_path)
+        return super().predict(data=data, data_path=data_path, batch_size=1, verbose=verbose, n_jobs=n_jobs)
 
-        test_data = self.data_loader.load_predict(corpus, batch_size=1, n_jobs=n_jobs)
-
-        return self.trainer.predict(model=self.model, test_data=test_data,
-                                    summary_writer=self.summary_writer, verbose=verbose,
-                                    label2idx=self.data_loader.label2idx)
+        # if self.model is None or self.data_loader is None \
+        #         or self.trainer is None or self.summary_writer is None:
+        #     raise NotImplementedError("Predict function should be executed after train function!")
+        #
+        # self.data_loader.verbose = verbose
+        #
+        # corpus = list()
+        # if data is not None:
+        #     corpus += [data] if isinstance(data, str) else data
+        # if data_path is not None:
+        #     corpus += RawDataLoader(verbose=verbose).load_predict(data_path)
+        #
+        # test_data = self.data_loader.load_predict(corpus, batch_size=1, n_jobs=n_jobs)
+        #
+        # return self.trainer.predict(model=self.model, test_data=test_data,
+        #                             summary_writer=self.summary_writer, verbose=verbose,
+        #                             label2idx=self.data_loader.label2idx)

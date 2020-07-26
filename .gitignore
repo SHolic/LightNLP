@@ -1,6 +1,9 @@
 # project
 /data
-/trained_model
+/trained_models
+
+# models debug core
+foo.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -60,6 +63,3 @@ coverage.xml
 
 # Django stuff:
 *.log
-
-# models debug core
-foo.py

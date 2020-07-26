@@ -1,1 +1,1 @@
-from ._bilstm_crf_model import BiLstmCrfTokenClassificationModel
+from ._bilstm_crf_model import BiLSTMCRFTokenClassificationModel

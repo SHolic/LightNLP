@@ -12,6 +12,6 @@ print("Model Structure:")
 model.visualize(name="model")
 
 pred_ret = model.predict(data=["如果随便填会出什么结果呢"],
-                         data_path="../../data/labelled_datasets/xtiny_atc.txt")
+                         data_path="../../data/labelled_datasets/xtiny_atc_sensitive.txt")
 
 print(pred_ret)

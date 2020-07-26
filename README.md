@@ -6,7 +6,7 @@
 
 一个**轻量级**的**NLP**深度学习库，提供不同NLP任务建模的**简单**工具。
 
-**LightNLP**的接口形式类似于**scikit-learn**，其目的在于可以通过**train()**和**predict()**方便快捷的训练较为复杂的NLP模型，为新手或项目时间不充裕的使用者，提供一个benchmark。
+**LightNLP**的接口形式类似于**scikit-learn**，其目的在于可以通过**train**和**predict**方便快捷的训练较为复杂的NLP模型，为新手或项目时间不充裕的使用者，提供一个benchmark。
 
 项目提供一些NLP的数据，如常用embedding，albert/bert pytorch预训练模型，训练数据等，放在**/data**文件夹下。
 
@@ -102,7 +102,7 @@ The interface of **LightNLP** likes **scikit-learn**, in order to implement
 
 
 
-# 
+This software is licensed with the MIT license. See LICENSE.txt for the full text.
 
 
 

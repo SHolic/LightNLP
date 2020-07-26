@@ -5,13 +5,13 @@ from transformers import AdamW, get_linear_schedule_with_warmup
 from ...core.base import BaseModelMixin
 from ...utils.data_utils import RawDataLoader, EmbeddingLoader, NERDataLoader
 from ...utils.visualizer import SummaryWriter
-from ...nn.models.ner import BiLstmCrfTokenClassificationModel
+from ...nn.models.ner import BiLSTMCRFTokenClassificationModel
 from ...trainer import NERTrainer
 
 
-class BiLstmCrfClassification(BaseModelMixin):
+class BiLSTMCRFClassification(BaseModelMixin):
     def __init__(self, ):
-        super(BiLstmCrfClassification, self).__init__()
+        super(BiLSTMCRFClassification, self).__init__()
         self.model = None
         self.data_loader = None
         self.trainer = None
@@ -58,7 +58,7 @@ class BiLstmCrfClassification(BaseModelMixin):
 
         train_data, dev_data = data_loader.load_train(corpus=corpus, label=label, n_jobs=n_jobs)
 
-        model = BiLstmCrfTokenClassificationModel(label_num=data_loader.label_num,
+        model = BiLSTMCRFTokenClassificationModel(label_num=data_loader.label_num,
                                                   label2idx=data_loader.label2idx,
                                                   vocab_size=embed_weights.size()[0],
                                                   embedding_dim=embed_weights.size()[1],
@@ -80,31 +80,29 @@ class BiLstmCrfClassification(BaseModelMixin):
                       optimizer=optimizer, scheduler=scheduler, summary_writer=summary_writer,
                       verbose=verbose, label2idx=data_loader.label2idx)
 
-        # summary_writer.plot(title="loss")
-
         self.model = model
         self.data_loader = data_loader
         self.trainer = trainer
         self.summary_writer = summary_writer
         return self
 
-    def predict(self, data=None, data_path=None, batch_size=64, verbose=1, n_jobs=1):
-        if self.model is None or self.data_loader is None \
-                or self.trainer is None or self.summary_writer is None:
-            raise NotImplementedError("Predict function should be executed after train function!")
-
-        self.data_loader.verbose = verbose
-        corpus = list()
-        if data is not None:
-            corpus += [data] if isinstance(data, str) else data
-        if data_path is not None:
-            corpus += RawDataLoader(verbose=verbose).load_predict(data_path)
-
-        test_data = self.data_loader.load_predict(corpus, batch_size=batch_size, n_jobs=n_jobs)
-
-        return self.trainer.predict(model=self.model, test_data=test_data,
-                                    summary_writer=self.summary_writer, verbose=verbose,
-                                    label2idx=self.data_loader.label2idx)
+    # def predict(self, data=None, data_path=None, batch_size=64, verbose=1, n_jobs=1):
+    #     if self.model is None or self.data_loader is None \
+    #             or self.trainer is None or self.summary_writer is None:
+    #         raise NotImplementedError("Predict function should be executed after train function!")
+    #
+    #     self.data_loader.verbose = verbose
+    #     corpus = list()
+    #     if data is not None:
+    #         corpus += [data] if isinstance(data, str) else data
+    #     if data_path is not None:
+    #         corpus += RawDataLoader(verbose=verbose).load_predict(data_path)
+    #
+    #     test_data = self.data_loader.load_predict(corpus, batch_size=batch_size, n_jobs=n_jobs)
+    #
+    #     return self.trainer.predict(model=self.model, test_data=test_data,
+    #                                 summary_writer=self.summary_writer, verbose=verbose,
+    #                                 label2idx=self.data_loader.label2idx)
 
     def save(self, path):
         torch.save({
@@ -118,7 +116,7 @@ class BiLstmCrfClassification(BaseModelMixin):
     @staticmethod
     def load(path):
         cp = torch.load(path)
-        ins = BiLstmCrfClassification()
+        ins = BiLSTMCRFClassification()
         ins.model = cp["model"]
         ins.atc_loader = cp["data_loader"]
         ins.trainer = cp["trainer"]
