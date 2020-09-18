@@ -1,8 +1,8 @@
 # LightNLP 
 
-![](https://img.shields.io/badge/language-python3-blue.svg)
-![](https://img.shields.io/badge/license-MIT-green.svg)
-![](https://img.shields.io/badge/coverage-10%-green.svg)
+[![](https://img.shields.io/badge/language-python3-blue.svg)]()
+[![](https://img.shields.io/badge/license-MIT-green.svg)]()
+[![](https://img.shields.io/badge/coverage-10%-green.svg)]()
 
 
 一个**轻量级**的**NLP**深度学习库，提供不同NLP任务建模的**简单**工具。
