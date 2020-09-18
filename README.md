@@ -29,7 +29,7 @@ LightNLP涉及的场景和模型有：
   - [ ] Han
   - [ ] ELMO
   - [x] cnntext
-  - [x] rcnn
+  - [ ] rcnn
   - [x] bert
   - [x] albert
 - 文本纠错(AET)
