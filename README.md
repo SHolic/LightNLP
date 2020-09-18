@@ -11,6 +11,8 @@
 
 项目提供一些NLP的数据，如常用embedding，albert/bert pytorch预训练模型，训练数据等，放在`data`文件夹下。
 
+当前版本：alpha-0.0.2
+
 ## 特点
 
 LightNLP涉及的场景和模型有：
