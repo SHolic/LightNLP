@@ -9,34 +9,35 @@
 
 **LightNLP**的接口形式类似于**scikit-learn**，其目的在于可以通过**train**和**predict**方便快捷的训练较为复杂的NLP模型，为新手或项目时间不充裕的使用者，提供一个benchmark。
 
-项目提供一些NLP的数据，如常用embedding，albert/bert pytorch预训练模型，训练数据等，放在**/data**文件夹下。
+项目提供一些NLP的数据，如常用embedding，albert/bert pytorch预训练模型，训练数据等，放在`data`文件夹下。
 
 ## 特点
 
 LightNLP涉及的场景和模型有：
 
-- 序列标注（NER）
-  - bilstm
-  - bilstm+crf
-  - albert
-  - abert+crf
-  - cnn
-- 本文分类（ATC）
-  - bilstm
-  - bilstm+attention
-  - Han
-  - ELMO
-  - cnntext
-  - rcnn
-  - transformer
-  - bert
-  - albert
-- 文本摘要（ATS）
-- 文本生成（ATG）
+- 序列标注(NER)
+  - [x] bilstm
+  - [x] bilstm+crf
+  - [x] albert
+  - [ ] abert+crf
+  - [ ] cnn
+- 本文分类(ATC)
+  - [x] bilstm
+  - [ ] bilstm+attention
+  - [ ] Han
+  - [ ] ELMO
+  - [x] cnntext
+  - [x] rcnn
+  - [x] bert
+  - [x] albert
+- 文本纠错(AET)
+  - [x] soft-masked-bert
+- 文本摘要(ATS)
+- 文本生成(ATG)
 
 ## 开始
 
-类似scikit-learn的使用方法，创建一个实例，调用**train**和**predict**函数实现模型的训练和预测，详细api和参数请见[文档]()。
+类似scikit-learn的使用方法，创建一个实例，调用**train**和**predict**函数实现模型的训练和预测，详细api和参数请见[文档（暂未开发）]()。
 
 #### 文本分类cnntext
 
@@ -92,20 +93,14 @@ print(model2.visualize("model"))
 
 
 ## 如何为此项目提供帮助
+- clone并使用本项目
+- issue留言
+- 有好的想法，成为contributor
+
+## 作者
+sanders bao
+baojunshan123@hotmail.com
 
 
 
-**LightNLP** is a extremely lightweight NLP libaray, it is a tool for building models promptly in different NLP scenes.
-
-The interface of **LightNLP** likes **scikit-learn**, in order to implement 
-
-
-
-
-
-This software is licensed with the MIT license. See LICENSE.txt for the full text.
-
-
-
-序列标注（NER），本文分类（ATC），文本摘要（ATS）和文本生成（ATG）
 
