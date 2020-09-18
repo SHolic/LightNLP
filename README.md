@@ -2,7 +2,11 @@
 
 ---
 
-[正在开发中......(5%)]
+![](https://img.shields.io/badge/language-python3-blue.svg)
+![](https://img.shields.io/badge/license-MIT-green.svg)
+![](https://img.shields.io/badge/coverage-10%-green)
+
+[正在开发中......(10%)]
 
 一个**轻量级**的**NLP**深度学习库，提供不同NLP任务建模的**简单**工具。
 
